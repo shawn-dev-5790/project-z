@@ -1,15 +1,15 @@
-export interface IPositionEntity {
+export interface IPositionVo {
   x: number
   y: number
   z: number // for 2D : layer-index | z-index
 }
 
-export default class PositionEntity implements IPositionEntity {
+export default class PositionVo implements IPositionVo {
   x: number
   y: number
   z: number
 
-  constructor(d: IPositionEntity) {
+  constructor(d: IPositionVo) {
     this.x = d.x
     this.y = d.y
     this.z = d.z

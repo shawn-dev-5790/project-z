@@ -1,11 +1,11 @@
-export interface ISystemEntity {
+export interface ISystemVo {
   isIncludedPool: boolean
 }
 
-export default class SystemEntity implements ISystemEntity {
+export default class SystemVo implements ISystemVo {
   isIncludedPool: boolean
 
-  constructor(d: ISystemEntity) {
+  constructor(d: ISystemVo) {
     this.isIncludedPool = d.isIncludedPool
   }
 

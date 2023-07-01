@@ -1,4 +1,4 @@
-export interface IStatEntity {
+export interface IStatVo {
   // base stat
   hp: number // hit point
   mp: number // mana point
@@ -10,7 +10,7 @@ export interface IStatEntity {
   // sub stat
 }
 
-export default class StatEntity implements IStatEntity {
+export default class StatVo implements IStatVo {
   hp: number
   mp: number
   mv: number
@@ -18,7 +18,7 @@ export default class StatEntity implements IStatEntity {
   dex: number
   int: number
 
-  constructor(d: IStatEntity) {
+  constructor(d: IStatVo) {
     this.hp = d.hp
     this.mp = d.mp
     this.mv = d.mv

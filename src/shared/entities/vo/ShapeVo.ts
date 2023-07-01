@@ -1,4 +1,4 @@
-export interface IShapeEntity {
+export interface IShapeVo {
   x: number
   y: number
   w: number
@@ -6,14 +6,14 @@ export interface IShapeEntity {
   r: number
 }
 
-export default class ShapeEntity implements IShapeEntity {
+export default class ShapeVo implements IShapeVo {
   x: number
   y: number
   w: number
   h: number
   r: number
 
-  constructor(d: IShapeEntity) {
+  constructor(d: IShapeVo) {
     this.x = d.x
     this.y = d.y
     this.w = d.w
