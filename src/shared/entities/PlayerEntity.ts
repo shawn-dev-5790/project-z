@@ -1,10 +1,10 @@
-import InventoryEntity from './InventoryEntity'
-import SkillEntity from './SkillEntity'
-import StateEntity from './StateEntity'
-import PositionVo from './vo/PositionVo'
-import ShapeVo from './vo/ShapeVo'
-import StatVo from './vo/StatVo'
-import SystemVo from './vo/SystemVo'
+import InventoryEntity, { IInventoryEntity } from './InventoryEntity'
+import SkillEntity, { ISkillEntity } from './SkillEntity'
+import StateEntity, { IStateEntity } from './StateEntity'
+import PositionVo, { IPositionVo } from './vo/PositionVo'
+import ShapeVo, { IShapeVo } from './vo/ShapeVo'
+import StatVo, { IStatVo } from './vo/StatVo'
+import SystemVo, { ISystemVo } from './vo/SystemVo'
 
 export interface IPlayerEntity {
   id: string
@@ -15,6 +15,16 @@ export interface IPlayerEntity {
   inventory: InventoryEntity
   skills: SkillEntity[]
   states: StateEntity[]
+}
+export interface IPlayerEntityInit {
+  id: string
+  system: ISystemVo
+  position: IPositionVo
+  shape: IShapeVo
+  stat: IStatVo
+  inventory: IInventoryEntity
+  skills: ISkillEntity[]
+  states: IStateEntity[]
 }
 
 export default class PlayerEntity implements IPlayerEntity {
@@ -27,7 +37,7 @@ export default class PlayerEntity implements IPlayerEntity {
   skills: SkillEntity[]
   states: StateEntity[]
 
-  constructor(d: IPlayerEntity) {
+  constructor(d: IPlayerEntityInit) {
     this.id = d.id
     this.system = new SystemVo(d.system)
     this.position = new PositionVo(d.position)
