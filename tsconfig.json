@@ -2,7 +2,6 @@
     "extends": "@tsconfig/node-lts/tsconfig.json",
     "include": [
         "src/**/*.ts",
-        "test/**/*.ts"
     ],
     "exclude": [
         "node_modules",
@@ -10,9 +9,25 @@
     "ts-node": {
         "transpileOnly": true,
         "files": true,
-        "compilerOptions": {}
+        "compilerOptions": {
+            "baseUrl": "./",
+            "outDir": "./dist",
+            "target": "es6",
+            "module": "commonjs",
+            "strict": true,
+            "moduleResolution": "node",
+            "resolveJsonModule": true,
+            "lib": [
+                "dom",
+                "dom.iterable",
+                "es6",
+                "scripthost"
+            ]
+        }
     },
     "compilerOptions": {
+        "baseUrl": "./",
+        "outDir": "./dist",
         "target": "es6",
         "module": "commonjs",
         "strict": true,
@@ -22,7 +37,8 @@
             "dom",
             "dom.iterable",
             "es6",
-            "scripthost"
+            "scripthost",
+            "es2023"
         ]
     }
 }
