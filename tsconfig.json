@@ -1,44 +1,25 @@
 {
-    "extends": "@tsconfig/node-lts/tsconfig.json",
-    "include": [
-        "src/**/*.ts",
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
-    "exclude": [
-        "node_modules",
-    ],
-    "ts-node": {
-        "transpileOnly": true,
-        "files": true,
-        "compilerOptions": {
-            "baseUrl": "./",
-            "outDir": "./dist",
-            "target": "es6",
-            "module": "commonjs",
-            "strict": true,
-            "moduleResolution": "node",
-            "resolveJsonModule": true,
-            "lib": [
-                "dom",
-                "dom.iterable",
-                "es6",
-                "scripthost"
-            ]
-        }
-    },
-    "compilerOptions": {
-        "baseUrl": "./",
-        "outDir": "./dist",
-        "target": "es6",
-        "module": "commonjs",
-        "strict": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "es6",
-            "scripthost",
-            "es2023"
-        ]
-    }
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "src"
+  ]
 }
