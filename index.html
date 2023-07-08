@@ -3,19 +3,28 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <link rel="stylesheet" href="/global.css">
+  <link rel="stylesheet" href="/src/assets/styles/global.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Project-Z</title>
 </head>
 
 <body>
+  <div id="assets">
+    <img id="skeleton" alt="skeleton" src="/src/assets/images/skeletonWarrior/run_attack.png" />
+    <img id="player" alt="player" src="/src/assets/images/mageFire/flame.png">
+    <img id="explosions" alt="explosions" src="/src/assets/images/explosions.png">
+    <audio id="audioExplosion1" src="https://www.frankslaboratory.co.uk/downloads/114/explosion1.wav"></audio>
+    <audio id="audioExplosion2" src="https://www.frankslaboratory.co.uk/downloads/114/explosion2.wav"></audio>
+    <audio id="audioExplosion3" src="https://www.frankslaboratory.co.uk/downloads/114/explosion3.wav"></audio>
+    <audio id="audioExplosion4" src="https://www.frankslaboratory.co.uk/downloads/114/explosion4.wav"></audio>
+    <audio id="audioExplosion5" src="https://www.frankslaboratory.co.uk/downloads/114/explosion5.wav"></audio>
+    <audio id="audioExplosion6" src="https://www.frankslaboratory.co.uk/downloads/114/explosion6.wav"></audio>
+  </div>
   <div id="game">
     <div id="screen">
       <canvas id="canvas1"></canvas>
     </div>
   </div>
-  <img hidden id="asteroid" src="https://www.frankslaboratory.co.uk/downloads/113/asteroid.png" />
   <script type="module" src="/src/main.ts"></script>
 </body>
 
