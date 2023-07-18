@@ -1,8 +1,8 @@
-import GameLoop from './game_manager.ts'
-import Particle from './_system/Particle.ts'
-import GameSpriteEntity from './_system/entities/GameSpriteEntity.ts'
-import { checkCollisionCircle } from './utilities/collisions.ts'
-import { getRandomIdx } from './utilities/randoms.ts'
+import { Mob } from './objects/Mob'
+import { TargetBoxCircle } from './entities/TargetBox'
+import GameLoop from './game_manager'
+import { ObjectPool } from './objects/ObjectPool'
+import { SpriteAnimator } from './utilities/SpriteAnimator'
 
 window.addEventListener('load', function () {
   // canvas
@@ -17,139 +17,60 @@ window.addEventListener('load', function () {
 
   // game
   const game = { w: canvas.width, h: canvas.height, fps: 1000 / 60, eps: 120 }
-  const skeletons: GameSpriteEntity[] = Array.from(
-    { length: game.eps },
-    () =>
-      new GameSpriteEntity({
-        img: document.querySelector('#skeleton')!,
-        infinite: true,
-        free: true,
-        x: 0,
-        y: 0,
-        w: 120,
-        h: 120,
-        sw: 128,
-        sh: 128,
-        fx: getRandomIdx(6),
-        fy: 0,
-        fm: 6,
-        at: 0,
-        ai: game.fps / 7,
-        ad: 1,
-      })
-  )
-  const explosions: GameSpriteEntity[] = Array.from(
-    { length: game.eps },
-    () =>
-      new GameSpriteEntity({
-        img: document.querySelector('#explosions')!,
-        infinite: true,
-        free: true,
-        x: 0,
-        y: 0,
-        w: 160,
-        h: 160,
-        sw: 300,
-        sh: 300,
-        fx: 20,
-        fy: getRandomIdx(3),
-        fm: 20,
-        at: 0,
-        ai: game.fps / 21,
-        ad: 1,
-      })
-  )
-  const particles: Particle[] = Array.from(
-    { length: game.eps },
-    () =>
-      new Particle({
-        game: game,
-        img: document.querySelector('#asteroid')!,
-        free: true,
-        x: Math.random() * -game.w,
-        y: Math.random() * game.h,
-        r: 40,
-        a: Math.random() > 0.5 ? 1 : -1,
-        v: Math.random() * 0.05 - 0.01,
-        s: Math.random() + 1,
-      })
-  )
-  const target = new Particle({
-    game: game,
-    img: document.querySelector('#asteroid')!,
-    free: true,
-    x: game.w / 2,
-    y: game.h / 2,
-    r: 80,
-  })
-  const player = new GameSpriteEntity({
-    img: document.querySelector('#player')!,
-    infinite: true,
-    free: true,
-    x: 0,
-    y: 0,
-    w: 160,
-    h: 160,
-    sw: 128,
-    sh: 128,
-    fx: 0,
-    fy: 0,
-    fm: 13,
-    at: 0,
-    ai: game.fps / 14,
-    ad: 1,
-  })
+  const cx = game.w * 0.5
+  const cy = game.h * 0.5
+  const img_exp: HTMLImageElement = document.querySelector('#explosions')!
 
-  const looper = new GameLoop()
+  const loop = new GameLoop()
 
-  looper.update = () => {
+  // objects
+  const player = new TargetBoxCircle(cx, cy, 40, 'gold')
+  const mobPool = new ObjectPool<Mob>(() => new Mob(), 1000)
+  const expPool = Array.from({ length: 1000 }, () => new SpriteAnimator(img_exp, '21x3', '150x150', 300))
+
+  Array.from({ length: 100 }, () => mobPool.get()?.spawn(game.w, game.h))
+
+  // update
+  loop.update = () => {
     ctx.clearRect(0, 0, game.w, game.h)
-
-    target.render(ctx)
-    target.start()
-
-    player.render(ctx, true)
-    player.start(target.x, target.y, 1)
-    player.update(looper.deltaTime)
-
-    particles.map((particle, i) => {
-      // particle.render(ctx)
-      particle.start()
-      particle.update()
-
-      skeletons[i].start(particle.x, particle.y, 30)
-      skeletons[i].render(ctx)
-      skeletons[i].update(looper.deltaTime)
-
-      if (checkCollisionCircle(target, particle)) {
-        explosions.find((exp) => exp.free)?.start(particle.x, particle.y, 1 * particle.s)
-        particle.reset()
-        skeletons[i].reset()
-      }
-    })
-
-    explosions
-      .filter((exp) => !exp.free)
+    // mobs
+    mobPool.pool
+      .filter((obj) => !obj.free)
+      .map((mob) => {
+        mob.render(ctx)
+        mob.traceTo(player)
+        mob.update()
+        mob.onCollision(() => {
+          const exp = expPool.find((exp) => !exp.isPlaying)
+          if (exp) {
+            exp.updatePos(mob.x, mob.y)
+            exp.updateSize(mob.r * 5, mob.r * 5)
+            exp.updateExplosionType()
+            exp.updateDuration(mob.r * 10)
+            exp.start()
+          }
+          mob.spawn(game.w, game.h)
+        })
+      })
+    expPool
+      .filter((exp) => exp.isPlaying)
       .map((exp) => {
         exp.render(ctx)
-        exp.update(looper.deltaTime)
+        exp.update(loop.deltaTime)
       })
+
+    // player
+    player.render(ctx)
   }
 
-  // events
-  window.addEventListener('keydown', (e: KeyboardEvent) => {
-    const tick = 12
-    if (e.key === 'ArrowRight') target.x += tick
-    if (e.key === 'ArrowLeft') target.x -= tick
-    if (e.key === 'ArrowUp') target.y -= tick
-    if (e.key === 'ArrowDown') target.y += tick
-    if (e.key === ' ') looper.lastTime ? looper.pause() : looper.start()
+  window.addEventListener('keypress', (e: KeyboardEvent) => {
+    if (e.key === ' ') loop.lastTime ? loop.pause() : loop.start()
   })
   window.addEventListener('mousemove', (e: MouseEvent) => {
-    target.x = e.offsetX
-    target.y = e.offsetY
+    player.x = e.offsetX
+    player.y = e.offsetY
   })
 
   // exec
-  looper.start()
+  loop.start()
 })
